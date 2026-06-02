@@ -1,0 +1,40 @@
+$ npm run test:only -- hello-ckb.mock.test.ts
+
+> ckb-campaign-01@0.1.0 test:only
+> jest hello-ckb.mock.test.ts
+
+  console.log
+    
+    ╔════════════════════════════════════════════════════════
+    ║ Script Verification Summary
+    ║ Type: input lock script
+    ║ Index: 0
+    ╠════════════════════════════════════════════════════════
+    ║ STDOUT:
+    ║ Run result: 0
+    ║ All cycles: 539
+    ╠════════════════════════════════════════════════════════
+    ║ STDERR:
+    ║ 
+    ╚════════════════════════════════════════════════════════
+
+      at ScriptVerificationResult.reportSummary (node_modules/ckb-testtool/dist.commonjs/unittest/core.js:106:17)
+
+  console.log
+    
+    ╔════════════════════════════════════════════════════════
+    ║ Script Verification Summary
+    ║ Type: output type script
+    ║ Index: 0
+    ╠════════════════════════════════════════════════════════
+    ║ STDOUT:
+    ║ Script log: [DEBUG] capacity guard passed with script args: "0x0000f598c2e0c24305af339c575c38c84da9e130fae09572ee7fe4d7651f874d6a47040000000000000000000000000000000000000000000000000000000000000000"
+    ║ Run result: 0
+    ║ All cycles: 13684659(13.1M)
+    ╠════════════════════════════════════════════════════════
+    ║ STDERR:
+    ║ 
+    ╚════════════════════════════════════════════════════════
+
+      at ScriptVerificationResult.reportSummary (node_modules/ckb-testtool/dist.commonjs/unittest/core.js:106:17)
+

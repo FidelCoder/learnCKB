@@ -1,0 +1,42 @@
+$ npm run deploy -- --yes
+
+> ckb-campaign-01@0.1.0 deploy
+> node scripts/deploy.js --yes
+
+🚀 Deploying 1 contract(s): hello-ckb
+   📁 Target: dist
+   📄 Output: deployment
+   🌐 Network: devnet
+
+🚀 Deploying contracts...
+💻 Running: offckb deploy --network devnet --target dist --output deployment --yes
+🖥️  Platform: linux
+
+🚀 Preparing to deploy 1 contract(s):
+   📄 hello-ckb.bc
+
+   📁 Deployment artifacts will be saved to: /home/core/Desktop/CKB/learnCKB/ckb-campaign-01/deployment
+   🌐 Network: devnet
+   🔑 Using default private key
+   🔄 Type ID: disabled (immutable)
+contract hello-ckb.bc deployed, tx hash: 0x0ee7a675070b6ae81352fde871668fad121861762e3bed40fc622902265417d8
+wait for tx confirmed on-chain...
+tx committed.
+
+📦 Saving deployment artifacts for 1 contract(s)...
+- 📄 Saving artifacts for hello-ckb.bc...
+- hello-ckb.bc deployment.toml file /home/core/Desktop/CKB/learnCKB/ckb-campaign-01/deployment/devnet/hello-ckb.bc/deployment.toml generated successfully.
+- Migration json file /home/core/Desktop/CKB/learnCKB/ckb-campaign-01/deployment/devnet/hello-ckb.bc/migrations/2026-06-03-020224.json generated successfully.
+- ✅ Successfully saved artifacts for hello-ckb.bc
+- 📄 Script info file generated: /home/core/Desktop/CKB/learnCKB/ckb-campaign-01/deployment/scripts.json
+
+🎉 All deployment artifacts saved successfully!
+Deploy process exited with code: 0
+
+✅ Successfully deployed all contracts!
+🎉 Deployment completed successfully!
+📁 Deployment artifacts saved to: deployment/
+
+💡 Next steps:
+   - Check the deployment artifacts in the deployment/ folder
+   - Run your tests to use the deployed contract scripts

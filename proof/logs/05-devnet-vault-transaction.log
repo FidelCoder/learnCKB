@@ -1,0 +1,10 @@
+$ npm run test:only -- hello-ckb.devnet.test.ts
+
+> ckb-campaign-01@0.1.0 test:only
+> jest hello-ckb.devnet.test.ts
+
+  console.log
+    Protected vault transaction sent: 0x3be9b31a810a1c5255eef321f8a6fab575ed02caced6e0396cef36f5cfc722a6
+
+      at Object.<anonymous> (tests/hello-ckb.devnet.test.ts:58:13)
+

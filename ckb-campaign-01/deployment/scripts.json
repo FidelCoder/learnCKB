@@ -1,0 +1,21 @@
+{
+  "devnet": {
+    "hello-ckb.bc": {
+      "codeHash": "0xf598c2e0c24305af339c575c38c84da9e130fae09572ee7fe4d7651f874d6a47",
+      "hashType": "data2",
+      "cellDeps": [
+        {
+          "cellDep": {
+            "outPoint": {
+              "txHash": "0x0ee7a675070b6ae81352fde871668fad121861762e3bed40fc622902265417d8",
+              "index": 0
+            },
+            "depType": "code"
+          }
+        }
+      ]
+    }
+  },
+  "testnet": {},
+  "mainnet": {}
+}

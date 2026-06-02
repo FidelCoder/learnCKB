@@ -1,0 +1,44 @@
+$ offckb --version
+0.4.6
+
+$ offckb config list
+config file:  /home/core/.config/offckb-nodejs/settings.json
+{
+  "bins": {
+    "rootFolder": "/home/core/.local/share/offckb-nodejs/bins",
+    "defaultCKBVersion": "0.205.0",
+    "downloadPath": "/home/core/.cache/offckb-nodejs/download"
+  },
+  "devnet": {
+    "rpcUrl": "http://127.0.0.1:8114",
+    "rpcProxyPort": 28114,
+    "configPath": "/home/core/.local/share/offckb-nodejs/devnet",
+    "dataPath": "/home/core/.local/share/offckb-nodejs/devnet/data",
+    "debugFullTransactionsPath": "/home/core/.local/share/offckb-nodejs/devnet/full-transactions",
+    "transactionsPath": "/home/core/.local/share/offckb-nodejs/devnet/transactions"
+  },
+  "testnet": {
+    "rpcUrl": "https://testnet.ckb.dev",
+    "rpcProxyPort": 38114,
+    "debugFullTransactionsPath": "/home/core/.local/share/offckb-nodejs/testnet/full-transactions",
+    "transactionsPath": "/home/core/.local/share/offckb-nodejs/testnet/transactions"
+  },
+  "mainnet": {
+    "rpcUrl": "https://mainnet.ckb.dev",
+    "rpcProxyPort": 48114,
+    "debugFullTransactionsPath": "/home/core/.local/share/offckb-nodejs/mainnet/full-transactions",
+    "transactionsPath": "/home/core/.local/share/offckb-nodejs/mainnet/transactions"
+  },
+  "tools": {
+    "ckbDebugger": {
+      "minVersion": "0.200.0"
+    }
+  }
+}
+
+$ pgrep -a ckb
+16501 /home/core/.local/share/offckb-nodejs/bins/0.205.0/ckb run -C /home/core/.local/share/offckb-nodejs/devnet
+17083 /home/core/.local/share/offckb-nodejs/bins/0.205.0/ckb miner -C /home/core/.local/share/offckb-nodejs/devnet
+
+$ curl local devnet get_tip_block_number
+{"jsonrpc":"2.0","result":"0x10e8","id":1}

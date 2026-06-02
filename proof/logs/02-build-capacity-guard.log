@@ -1,0 +1,17 @@
+$ npm run build
+
+> ckb-campaign-01@0.1.0 build
+> node scripts/build-all.js
+
+Building 1 contract(s): hello-ckb
+
+📦 Building contract: hello-ckb
+Building hello-ckb from contracts/hello-ckb/src/index.ts...
+  📦 Bundling with esbuild with release settings...
+  🔧 Compiling to bytecode...
+  ✅ Contract 'hello-ckb' built successfully!
+     📄 JavaScript: dist/hello-ckb.js
+     🔗 Bytecode: dist/hello-ckb.bc
+✅ Successfully built: hello-ckb with release version
+
+🎉 All contracts built successfully!

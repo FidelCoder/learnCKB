@@ -1,4 +1,4 @@
-# Campaign 2 Proof - FidelCoder
+# Campaign 2 Proof
 
 Tutorial completed: [Store Data on Cell](https://docs.nervos.org/docs/dapp/store-data-on-cell)
 

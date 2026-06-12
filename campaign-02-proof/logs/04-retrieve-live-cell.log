@@ -1,0 +1,19 @@
+Step 3 - Wait for commit and retrieve Live Cell data
+  poll 1: pending
+  poll 2: pending
+  poll 3: pending
+  poll 4: pending
+  poll 5: pending
+  poll 6: proposed
+  poll 7: proposed
+  poll 8: proposed
+  poll 9: committed
+Committed block: 0x191f
+Out point: 0xf4c4cc0780fc107638391c51770a89b96f0b9cba38fc35d700d6e9ff174070f8:0x0
+Live cell status: live
+Live cell capacity: 0x3a7cafd00
+Live cell data hex: 0x466964656c436f6465722043616d706169676e2030323a20492073746f72656420746869732073656e74656e63652061732063656c6c20646174612c207468656e2072656164206974206261636b2066726f6d2061206c6976652063656c6c2e
+Live cell decoded message: FidelCoder Campaign 02: I stored this sentence as cell data, then read it back from a live cell.
+
+Saved proof JSON: /home/core/Desktop/CKB/learnCKB/campaign-02-proof/store-data-result.json
+Tutorial completed: encoded, sent, committed, retrieved, and decoded live cell data.

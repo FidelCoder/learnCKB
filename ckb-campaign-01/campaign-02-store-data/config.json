@@ -1,0 +1,6 @@
+{
+  "account": "FidelCoder",
+  "message": "FidelCoder Campaign 02: I stored this sentence as cell data, then read it back from a live cell.",
+  "reflectionAngle": "cell-data-as-receipt",
+  "tutorialUrl": "https://docs.nervos.org/docs/dapp/store-data-on-cell"
+}

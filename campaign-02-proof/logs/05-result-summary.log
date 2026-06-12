@@ -1,0 +1,20 @@
+Campaign #02 Store Data on Cell - RPC/live-cell summary
+
+Account: FidelCoder
+Network: OffCKB local devnet
+RPC: http://127.0.0.1:28114
+Tutorial: https://docs.nervos.org/docs/dapp/store-data-on-cell
+
+Message: FidelCoder Campaign 02: I stored this sentence as cell data, then read it back from a live cell.
+Encoded hex: 0x466964656c436f6465722043616d706169676e2030323a20492073746f72656420746869732073656e74656e63652061732063656c6c20646174612c207468656e2072656164206974206261636b2066726f6d2061206c6976652063656c6c2e
+Decoded preview: FidelCoder Campaign 02: I stored this sentence as cell data, then read it back from a live cell.
+
+Transaction hash: 0xf4c4cc0780fc107638391c51770a89b96f0b9cba38fc35d700d6e9ff174070f8
+Out point: 0xf4c4cc0780fc107638391c51770a89b96f0b9cba38fc35d700d6e9ff174070f8:0x0
+Transaction status: committed
+Block number: 0x191f
+
+Live cell status: live
+Live cell capacity: 0x3a7cafd00
+Live cell data hex: 0x466964656c436f6465722043616d706169676e2030323a20492073746f72656420746869732073656e74656e63652061732063656c6c20646174612c207468656e2072656164206974206261636b2066726f6d2061206c6976652063656c6c2e
+Live cell decoded: FidelCoder Campaign 02: I stored this sentence as cell data, then read it back from a live cell.

@@ -70,3 +70,16 @@ For local devnet, proof comes from local RPC output, deployment artifacts, logs,
 ## Reflection reminder
 
 The campaign asks participants to avoid AI-generated reflections. Use the proof artifacts here to write the final reflection in your own words.
+
+## Build on CKB Campaign #02
+
+Campaign #02 completes the official [Store Data on Cell](https://docs.nervos.org/docs/dapp/store-data-on-cell) tutorial on local OffCKB devnet.
+
+Proof folder: [campaign-02-proof](campaign-02-proof/README.md)
+
+- Transaction hash: `0xf4c4cc0780fc107638391c51770a89b96f0b9cba38fc35d700d6e9ff174070f8`
+- Out point: `0xf4c4cc0780fc107638391c51770a89b96f0b9cba38fc35d700d6e9ff174070f8:0x0`
+- Live cell status: `live`
+- Stored message decoded from cell data: `FidelCoder Campaign 02: I stored this sentence as cell data, then read it back from a live cell.`
+
+The tutorial script is in [ckb-campaign-01/campaign-02-store-data/store-data-on-cell.mjs](ckb-campaign-01/campaign-02-store-data/store-data-on-cell.mjs).

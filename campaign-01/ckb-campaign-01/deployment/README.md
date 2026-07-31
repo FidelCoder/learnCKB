@@ -18,14 +18,14 @@ To deploy your contracts to the CKB blockchain, use the `offckb deploy` command:
 npm run build
 
 # Deploy to devnet (default)
-offckb deploy --network devnet --target <contract-binary-path> --output /home/core/Desktop/CKB/ckb-campaign-01/deployment
+offckb deploy --network devnet --target <contract-binary-path> --output deployment
 ```
 
 ### Deploy to Testnet
 
 ```bash
 # Deploy to testnet
-offckb deploy --network testnet --target <contract-binary-path> --output /home/core/Desktop/CKB/ckb-campaign-01/deployment
+offckb deploy --network testnet --target <contract-binary-path> --output deployment
 ```
 
 ### Deploy to Mainnet

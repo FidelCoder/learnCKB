@@ -52,7 +52,7 @@ offckb node
 Then run:
 
 ```bash
-cd ckb-campaign-01
+cd campaign-01/ckb-campaign-01
 npm install
 npm run campaign02:store-data
 ```

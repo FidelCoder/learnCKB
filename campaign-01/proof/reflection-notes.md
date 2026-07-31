@@ -4,7 +4,7 @@ Date: 2026-06-03
 
 ## Environment
 
-- Workspace: `/home/core/Desktop/CKB/learnCKB/ckb-campaign-01`
+- Workspace: `/home/core/Desktop/CKB/learnCKB/campaign-01/ckb-campaign-01`
 - OffCKB CLI: `0.4.6`
 - CKB devnet binary/config: OffCKB default `0.205.0`
 - Local devnet RPC: `http://127.0.0.1:8114`
@@ -40,15 +40,15 @@ A devnet test transaction created a protected vault cell using the deployed cont
 
 ## Proof Files
 
-- `proof/screenshots/01-setup-devnet.png`
-- `proof/screenshots/02-build-capacity-guard.png`
-- `proof/screenshots/03-mock-execution.png`
-- `proof/screenshots/04-deploy-devnet.png`
-- `proof/screenshots/05-devnet-vault-transaction.png`
-- `proof/devnet-deployment-final.json`
-- `proof/devnet-vault-final.json`
-- `ckb-campaign-01/deployment/scripts.json`
-- `ckb-campaign-01/deployment/devnet/hello-ckb.bc/migrations/2026-06-03-020224.json`
+- `campaign-01/proof/screenshots/01-setup-devnet.png`
+- `campaign-01/proof/screenshots/02-build-capacity-guard.png`
+- `campaign-01/proof/screenshots/03-mock-execution.png`
+- `campaign-01/proof/screenshots/04-deploy-devnet.png`
+- `campaign-01/proof/screenshots/05-devnet-vault-transaction.png`
+- `campaign-01/proof/devnet-deployment-final.json`
+- `campaign-01/proof/devnet-vault-final.json`
+- `campaign-01/ckb-campaign-01/deployment/scripts.json`
+- `campaign-01/ckb-campaign-01/deployment/devnet/hello-ckb.bc/migrations/2026-06-03-020224.json`
 
 ## Reflection Notes To Rewrite Personally
 

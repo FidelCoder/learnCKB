@@ -1,0 +1,18 @@
+Script started on 2026-07-31 06:04:29+03:00 [COMMAND="CKB_RPC_URL=http://127.0.0.1:1 pnpm verify:offline" <not executed on terminal>]
+
+> simple-lock@0.1.0 verify:offline /home/core/Desktop/CKB/learnCKB/campaign-03-simple-lock
+> node scripts/verify-campaign-03-offline.mjs
+
+Secp256k1 bindings are not compiled. Pure JS implementation will be used.
+Build on CKB Campaign 03 - Offline Proof Verified
+Checks: 47 transaction invariants passed
+Portable evidence SHA-256: 407a0dcf41ab7f9d54683caaaa23a036abfadbc7ca122aea6d67650e46c6f731
+Bytecode SHA-256: 635c047758c258f0dadbfdf4e5cb0258afa13f2d1d77787aba68285100e9320e
+Bytecode CKB hash: 0x5736ca900eed95140d6223f55182a422b7b5410eb772bffc32926e1be47d22e6
+Deployment: 0x41d09a1fe23ede9267b56226b5fcbc4f063a58698af5428cbe47683bc4aa452a / committed
+Deposit: 0x05e80e7037e24b40d2c1ea9ec8cace6a63ed7f9ed620f64f09e56d46a946cd78 / 300 CKB
+Unlock: 0x74a97350a32f3c981e49ef38bae4a281fe2e5d908676baa8afd29a59ede43454 / committed
+Outputs: 99 CKB recipient / 200.99999 CKB hash-lock change
+No RPC connection was used; verification read only checked-in artifacts.
+
+Script done on 2026-07-31 06:04:30+03:00 [COMMAND_EXIT_CODE="0"]

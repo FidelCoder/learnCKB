@@ -83,3 +83,35 @@ Proof folder: [campaign-02-proof](campaign-02-proof/README.md)
 - Stored message decoded from cell data: `FidelCoder Campaign 02: I stored this sentence as cell data, then read it back from a live cell.`
 
 The tutorial script is in [ckb-campaign-01/campaign-02-store-data/store-data-on-cell.mjs](ckb-campaign-01/campaign-02-store-data/store-data-on-cell.mjs).
+
+## Build on CKB Campaign #03
+
+Campaign #03 completes the official
+[Build a Simple Lock](https://docs.nervos.org/docs/dapp/simple-lock) tutorial
+with a custom hash-lock contract and a production-built frontend for depositing
+and unlocking CKB.
+
+Campaign package: [campaign-03](campaign-03/README.md)
+
+Implementation: [campaign-03/simple-lock](campaign-03/simple-lock/README.md)
+
+Proof: [campaign-03/proof](campaign-03/proof/README.md)
+
+- Network: OffCKB local devnet
+- Deployed code hash:
+  `0x5736ca900eed95140d6223f55182a422b7b5410eb772bffc32926e1be47d22e6`
+- Deployment transaction:
+  `0x41d09a1fe23ede9267b56226b5fcbc4f063a58698af5428cbe47683bc4aa452a`
+- 300 CKB deposit transaction:
+  `0x05e80e7037e24b40d2c1ea9ec8cace6a63ed7f9ed620f64f09e56d46a946cd78`
+- Frontend unlock transaction:
+  `0x74a97350a32f3c981e49ef38bae4a281fe2e5d908676baa8afd29a59ede43454`
+- Wrong-preimage attempt: rejected by the custom contract with exit code 11
+- Correct unlock: 99 CKB to the recipient, 200.99999 CKB in hash-lock
+  change, and a 0.00001 CKB fee
+- Portable proof: [raw RPC evidence](campaign-03/proof/rpc-evidence.json) plus
+  one shared verifier that checks 47 transaction, bytecode, witness, capacity,
+  fee, address, and live-cell invariants without requiring the private devnet
+
+The campaign reflection is intentionally not generated here. The participant
+must write it from their own experience before submitting.

@@ -1,0 +1,7 @@
+Script started on 2026-07-30 23:34:46+03:00 [COMMAND="pnpm --filter frontend run typecheck" <not executed on terminal>]
+
+> frontend@0.1.0 typecheck /home/core/Desktop/CKB/learnCKB/campaign-03-simple-lock/frontend
+> tsc --noEmit --incremental false
+
+
+Script done on 2026-07-30 23:34:51+03:00 [COMMAND_EXIT_CODE="0"]

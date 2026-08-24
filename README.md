@@ -10,6 +10,7 @@ dApps, and verifiable OffCKB devnet proof.
 | [#01](campaign-01/README.md) | Capacity-guard lock with CKB JavaScript VM | [Implementation and proof](campaign-01/README.md) |
 | [#02](campaign-02-proof/README.md) | Store Data on Cell | [Tutorial proof](campaign-02-proof/README.md) |
 | [#03](campaign-03/README.md) | Simple hash lock and transfer/unlock frontend | [Implementation and proof](campaign-03/README.md) |
+| [#04](challenge-4/README.md) | Create a Digital Object (DOB) with Spore SDK | [Implementation and proof](challenge-4/README.md) |
 
 ## Proof Model
 

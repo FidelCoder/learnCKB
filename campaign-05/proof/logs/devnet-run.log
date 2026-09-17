@@ -1,0 +1,111 @@
+{
+  "step": "account",
+  "issuerAddress": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqvwg2cen8extgq8s5puft8vf40px3f599cytcyd8",
+  "issuerLockHash": "0x7de82d61a7eb2ec82b0dc653e558ba120efcbfbb44dac87c12972d05bf250653",
+  "issuerCapacityShannon": "4200000000000000"
+}
+{
+  "step": "issue",
+  "txHash": "0x9b5ff4d33e0e9de3857d3a1c5708e95d59c512f50879c14eb1185aa93db846f8",
+  "issueAmount": "1000",
+  "xudtArgs": "0x7de82d61a7eb2ec82b0dc653e558ba120efcbfbb44dac87c12972d05bf25065300000000",
+  "xudtType": {
+    "codeHash": "0x1a1e4fef34f5982906f745b048fe7b1089647e82346074e0f32c2ece26cf6b1e",
+    "hashType": "type",
+    "args": "0x7de82d61a7eb2ec82b0dc653e558ba120efcbfbb44dac87c12972d05bf25065300000000"
+  },
+  "output": {
+    "capacity": "14600000000",
+    "lock": {
+      "codeHash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+      "hashType": "type",
+      "args": "0x8e42b1999f265a0078503c4acec4d5e134534297"
+    },
+    "type": {
+      "codeHash": "0x1a1e4fef34f5982906f745b048fe7b1089647e82346074e0f32c2ece26cf6b1e",
+      "hashType": "type",
+      "args": "0x7de82d61a7eb2ec82b0dc653e558ba120efcbfbb44dac87c12972d05bf25065300000000"
+    }
+  }
+}
+{
+  "step": "query",
+  "queryByIssuerLockScriptHash": "0x7de82d61a7eb2ec82b0dc653e558ba120efcbfbb44dac87c12972d05bf250653",
+  "cellCount": 1,
+  "cells": [
+    {
+      "outPoint": {
+        "txHash": "0x9b5ff4d33e0e9de3857d3a1c5708e95d59c512f50879c14eb1185aa93db846f8",
+        "index": "0"
+      },
+      "amount": "1000",
+      "lock": {
+        "codeHash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+        "hashType": "type",
+        "args": "0x8e42b1999f265a0078503c4acec4d5e134534297"
+      },
+      "type": {
+        "codeHash": "0x1a1e4fef34f5982906f745b048fe7b1089647e82346074e0f32c2ece26cf6b1e",
+        "hashType": "type",
+        "args": "0x7de82d61a7eb2ec82b0dc653e558ba120efcbfbb44dac87c12972d05bf25065300000000"
+      }
+    }
+  ]
+}
+{
+  "step": "transfer",
+  "txHash": "0xb2c9904d26446d20862a3c059f7bfd6f19687d4b2be94da6265e8621c5ce7ada",
+  "transferAmount": "250",
+  "receiverAddress": "ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqt435c3epyrupszm7khk6weq5lrlyt52lg48ucew",
+  "receiverLock": {
+    "codeHash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+    "hashType": "type",
+    "args": "0x758d311c8483e0602dfad7b69d9053e3f917457d"
+  },
+  "balanceChangeAmount": "750",
+  "cells": [
+    {
+      "outPoint": {
+        "txHash": "0xb2c9904d26446d20862a3c059f7bfd6f19687d4b2be94da6265e8621c5ce7ada",
+        "index": "0"
+      },
+      "amount": "250",
+      "lock": {
+        "codeHash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+        "hashType": "type",
+        "args": "0x758d311c8483e0602dfad7b69d9053e3f917457d"
+      },
+      "type": {
+        "codeHash": "0x1a1e4fef34f5982906f745b048fe7b1089647e82346074e0f32c2ece26cf6b1e",
+        "hashType": "type",
+        "args": "0x7de82d61a7eb2ec82b0dc653e558ba120efcbfbb44dac87c12972d05bf25065300000000"
+      }
+    },
+    {
+      "outPoint": {
+        "txHash": "0xb2c9904d26446d20862a3c059f7bfd6f19687d4b2be94da6265e8621c5ce7ada",
+        "index": "1"
+      },
+      "amount": "750",
+      "lock": {
+        "codeHash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+        "hashType": "type",
+        "args": "0x8e42b1999f265a0078503c4acec4d5e134534297"
+      },
+      "type": {
+        "codeHash": "0x1a1e4fef34f5982906f745b048fe7b1089647e82346074e0f32c2ece26cf6b1e",
+        "hashType": "type",
+        "args": "0x7de82d61a7eb2ec82b0dc653e558ba120efcbfbb44dac87c12972d05bf25065300000000"
+      }
+    }
+  ]
+}
+{
+  "step": "verified",
+  "issueTxHash": "0x9b5ff4d33e0e9de3857d3a1c5708e95d59c512f50879c14eb1185aa93db846f8",
+  "transferTxHash": "0xb2c9904d26446d20862a3c059f7bfd6f19687d4b2be94da6265e8621c5ce7ada",
+  "issuerLockHash": "0x7de82d61a7eb2ec82b0dc653e558ba120efcbfbb44dac87c12972d05bf250653",
+  "receiverLockArgs": "0x758d311c8483e0602dfad7b69d9053e3f917457d",
+  "receiverTokenAmount": "250",
+  "queryFoundReceiverCell": true
+}

@@ -1,0 +1,22 @@
+{
+  "network": "local-offckb-devnet",
+  "rpc": "http://127.0.0.1:28114",
+  "dappUrl": "http://localhost:1234",
+  "issuerLockHash": "0x7de82d61a7eb2ec82b0dc653e558ba120efcbfbb44dac87c12972d05bf250653",
+  "xudtArgs": "0x7de82d61a7eb2ec82b0dc653e558ba120efcbfbb44dac87c12972d05bf25065300000000",
+  "issue": {
+    "txHash": "0x9b5ff4d33e0e9de3857d3a1c5708e95d59c512f50879c14eb1185aa93db846f8",
+    "amount": "1000"
+  },
+  "query": {
+    "input": "issuerLockHash",
+    "cellCount": 1,
+    "amount": "1000"
+  },
+  "transfer": {
+    "txHash": "0xb2c9904d26446d20862a3c059f7bfd6f19687d4b2be94da6265e8621c5ce7ada",
+    "receiverLockArgs": "0x758d311c8483e0602dfad7b69d9053e3f917457d",
+    "receiverAmount": "250",
+    "issuerChangeAmount": "750"
+  }
+}

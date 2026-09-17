@@ -1,0 +1,7 @@
+Command: NETWORK=devnet npm start
+
+> @offckb/xudt@0.1.0 start
+> parcel index.html
+
+Server running at http://localhost:1234
+HTTP probe: http://127.0.0.1:1234/ -> 200 OK

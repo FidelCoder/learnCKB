@@ -12,6 +12,7 @@ dApps, and verifiable OffCKB devnet proof.
 | [#03](campaign-03/README.md) | Simple hash lock and transfer/unlock frontend | [Implementation and proof](campaign-03/README.md) |
 | [#04](challenge-4/README.md) | Create a Digital Object (DOB) with Spore SDK | [Implementation and proof](challenge-4/README.md) |
 | [#05](campaign-05/README.md) | Create a Fungible Token with the xUDT standard | [Implementation and local proof](campaign-05/README.md) |
+| [#06](campaign-06/README.md) | Fiber browser node, Testnet channel, and keysend payment | [Implementation and screenshots](campaign-06/README.md) |
 
 ## Proof Model
 

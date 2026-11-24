@@ -1,7 +1,9 @@
 import type { FiberBrowserNode, SendPaymentParams } from '@fiber-pay/sdk/browser';
 import { FEE_CEILING, RANSOM } from './units.ts';
 import type { Packet } from './packet.ts';
-import { assertRansomLive, dispatchRansom, RansomRejectedError } from './settlement-guards.ts';
+import {
+  assertRansomLive, dispatchRansom, isPaymentSessionMissing, RansomRejectedError,
+} from './settlement-guards.ts';
 
 export async function inspectPacket(node: FiberBrowserNode, packet: Packet) {
   const { invoice } = await node.parseInvoice({ invoice: packet.ransom });
@@ -24,8 +26,13 @@ export async function payRansom(
     if (priorHash.toLowerCase() !== packet.hash.toLowerCase()) {
       throw new Error('Restore the packet from the previous payment.');
     }
-    const seen = await node.getPayment({ payment_hash: packet.hash });
-    if (!forceRetry || seen.status !== 'Failed') return seen;
+    try {
+      const seen = await node.getPayment({ payment_hash: packet.hash });
+      if (!forceRetry || seen.status !== 'Failed') return seen;
+    } catch (error) {
+      // Reload/restart dropped the actor: nothing is in flight, so start fresh.
+      if (!isPaymentSessionMissing(error)) throw error;
+    }
   }
   assertRansomLive(invoice);
   remember(packet.hash);

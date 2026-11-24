@@ -42,6 +42,12 @@ const hardRejections = new Set([
   'payment secret is required for multi-path payment',
 ]);
 
+/** True when the node has no in-memory actor for this hash (reload, restart, or never sent). */
+export function isPaymentSessionMissing(error: unknown): boolean {
+  const reason = rpcReason(error);
+  return reason.startsWith('Payment session not found:');
+}
+
 export async function dispatchRansom(
   node: Pick<FiberBrowserNode, 'sendPayment' | 'getPayment' | 'waitForPayment'>,
   hash: `0x${string}`,
@@ -56,9 +62,8 @@ export async function dispatchRansom(
     try {
       return await node.getPayment({ payment_hash: hash });
     } catch (checkError) {
-      const missing = rpcReason(checkError);
-      if (missing.startsWith('Payment session not found:')
-        && missing.toLowerCase().includes(hash.slice(2).toLowerCase())) {
+      if (isPaymentSessionMissing(checkError)
+        && rpcReason(checkError).toLowerCase().includes(hash.slice(2).toLowerCase())) {
         throw new RansomRejectedError(reason);
       }
       throw error;

@@ -1,9 +1,17 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { inspectPacket, payRansom } from '../core/settlement.ts';
+import { isPaymentSessionMissing } from '../core/settlement-guards.ts';
 
 const hash = `0x${'a'.repeat(64)}` as const;
 const packet: any = { ransom: 'fibt-example', hash, relay: {} };
+
+function sessionMissingError(target = hash) {
+  return new Error(
+    `WASM RPC error: ErrorObject { code: ServerError(-32000), message: `
+    + `${JSON.stringify(`InvalidParameter: Payment session not found: Hash256(${target})`)}, data: None }`,
+  );
+}
 
 function fixture(status = 'Success'): { node: any; calls: string[] } {
   const calls: string[] = [];
@@ -82,6 +90,24 @@ test('a hard rejection clears the attempt so reload does not restore it', async 
   };
   await assert.rejects(payRansom(node, packet, '', remember), /Payment was not submitted/);
   assert.equal(JSON.parse(saved).ransomHash, '');
+});
+
+test('a vanished payment session is recognized and re-dispatched', async () => {
+  assert.equal(isPaymentSessionMissing(sessionMissingError()), true);
+  assert.equal(isPaymentSessionMissing(new Error('boom')), false);
+
+  const { node, calls } = fixture();
+  let sent = false;
+  node.getPayment = async () => { throw sessionMissingError(); };
+  node.sendPayment = async () => {
+    sent = true;
+    calls.push('send');
+    return { status: 'Success', payment_hash: hash, fee: '0x0' };
+  };
+  const result = await payRansom(node, packet, hash, () => calls.push('record'), false);
+  assert.equal(sent, true);
+  assert.equal(result.status, 'Success');
+  assert.deepEqual(calls, ['record', 'send']);
 });
 
 test('an uncertain send or polling timeout keeps the attempt and never resends it', async () => {

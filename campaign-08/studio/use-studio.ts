@@ -8,6 +8,7 @@ import {
 import { digestHex, unseal } from '../core/keys';
 import { mintPacket, readPacket } from '../core/packet';
 import { inspectPacket, payRansom } from '../core/settlement';
+import { isPaymentSessionMissing } from '../core/settlement-guards';
 import { makeIdentityGuard } from '../core/session';
 import {
   BUYER_ID, SENDER_ID, loadRunSnapshot, profileId, RUN_SNAPSHOT, type RunSnapshot,
@@ -208,7 +209,17 @@ export function useStudio() {
     let result: GetPaymentResult;
     if (standing) {
       feed({ type: 'ribbon', text: 'Checking the earlier 5 CKB relay…' });
-      result = await rig.getPayment({ payment_hash: standing as `0x${string}` });
+      try {
+        result = await rig.getPayment({ payment_hash: standing as `0x${string}` });
+      } catch (error) {
+        if (!isPaymentSessionMissing(error)) throw error;
+        sessionStorage.removeItem(slot);
+        feed({ type: 'ribbon', text: 'Earlier relay session is gone — sending a fresh 5 CKB relay…' });
+        sessionStorage.setItem(slot, 'inflight');
+        result = await rig.sendPayment({ target_pubkey: HUB_KEY, amount: '0x1dcd6500', keysend: true });
+        sessionStorage.setItem(slot, result.payment_hash);
+        feed({ type: 'relay', patch: { hash: result.payment_hash, stuck: false } });
+      }
     } else {
       sessionStorage.setItem(slot, 'inflight');
       feed({ type: 'ribbon', text: 'Relaying 5 CKB from sender to Bottle…' });
@@ -239,7 +250,18 @@ export function useStudio() {
     const { hash } = state.relay;
     if (!hash) throw new Error('Send the 5 CKB relay first — nothing to audit.');
     feed({ type: 'ribbon', text: 'Auditing the relay hash against the sender node…' });
-    const result = await rig.getPayment({ payment_hash: hash as `0x${string}` });
+    let result;
+    try {
+      result = await rig.getPayment({ payment_hash: hash as `0x${string}` });
+    } catch (error) {
+      if (isPaymentSessionMissing(error)) {
+        throw new Error(
+          'This relay session is no longer on the node (page reload or restart). '
+          + 'Send the 5 CKB relay again if the transfer never settled.',
+        );
+      }
+      throw error;
+    }
     const fee = BigInt(result.fee ?? '0x0');
     feed({
       type: 'relay',
@@ -324,7 +346,18 @@ export function useStudio() {
     if (!state.ransomHash) throw new Error('Pay the ransom first — nothing to check.');
     feed({ type: 'ribbon', text: 'Re-reading the ransom from the node…' });
     await inspectPacket(rig, state.packet);
-    const result = await rig.getPayment({ payment_hash: state.ransomHash as `0x${string}` });
+    let result;
+    try {
+      result = await rig.getPayment({ payment_hash: state.ransomHash as `0x${string}` });
+    } catch (error) {
+      if (isPaymentSessionMissing(error)) {
+        throw new Error(
+          'This payment session is no longer on the node (page reload or restart). '
+          + 'Pay the ransom again to start a fresh attempt, or Reset the exchange if it already settled.',
+        );
+      }
+      throw error;
+    }
     feed({ type: 'payment', result });
     feed({ type: 'ribbon', text: `Ransom: ${result.status}` });
     await resyncDesk('buyer');

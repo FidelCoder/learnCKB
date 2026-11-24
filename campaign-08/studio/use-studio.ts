@@ -183,12 +183,14 @@ export function useStudio() {
     const rig = rigs.current[desk];
     if (!rig) throw new Error('Start this desk first.');
     feed({ type: 'ribbon', text: 'Carving the 500 CKB corridor through Bottle…' });
-    const lane = await openCorridor(rig);
+    const lane = await openCorridor(rig, (state) => {
+      feed({ type: 'ribbon', text: `Corridor funding: ${state}…` });
+    });
     feed({ type: 'desk', desk, patch: { lane } });
     await resyncDesk(desk);
     feed({
       type: 'ribbon',
-      text: lane && isOpen(lane) ? 'Corridor open: CHANNEL_READY.' : 'Corridor opening submitted. Confirm CHANNEL_READY.',
+      text: lane && isOpen(lane) ? 'Corridor open: CHANNEL_READY.' : `Corridor is ${lane?.state.state_name ?? 'unknown'}.`,
     });
   }, desk), [feed, resync]);
 

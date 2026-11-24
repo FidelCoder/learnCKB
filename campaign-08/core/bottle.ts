@@ -126,13 +126,48 @@ async function carveCorridor(node: FiberBrowserNode, attempts = 8) {
   );
 }
 
-export async function openCorridor(node: FiberBrowserNode) {
+/** Funding negotiation can take a while; poll until Bottle and the funder both confirm. */
+export async function awaitCorridorReady(
+  node: FiberBrowserNode,
+  timeoutMs = 90_000,
+  onTick?: (state: string) => void,
+) {
+  const deadline = Date.now() + timeoutMs;
+  let lastState = 'UNKNOWN';
+  while (Date.now() < deadline) {
+    const lane = await findCorridor(node);
+    if (!lane) {
+      await pause(2_000);
+      continue;
+    }
+    lastState = lane.state.state_name;
+    onTick?.(lastState);
+    if (isOpen(lane)) return lane;
+    if (corridorClosed(lastState)) {
+      throw new Error(`Corridor closed during funding (${lastState}). Open it again.`);
+    }
+    await pause(2_000);
+  }
+  throw new Error(
+    `Corridor is still ${lastState} after ${Math.round(timeoutMs / 1000)}s. `
+    + 'Confirm the desk has ≥501 CKB, Bottle is reachable, then press Re-check corridor.',
+  );
+}
+
+export async function openCorridor(
+  node: FiberBrowserNode,
+  onTick?: (state: string) => void,
+) {
   await dialHub(node);
   const standing = await findCorridor(node);
-  if (standing) return standing;
-  await assertFunded(node);
-  await carveCorridor(node);
-  return findCorridor(node);
+  if (standing && isOpen(standing)) return standing;
+  if (!standing) {
+    await assertFunded(node);
+    await carveCorridor(node);
+  } else {
+    onTick?.(standing.state.state_name);
+  }
+  return await awaitCorridorReady(node, 90_000, onTick);
 }
 
 export async function findCorridor(node: FiberBrowserNode) {

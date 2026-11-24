@@ -83,7 +83,7 @@ export function useStudio() {
     }
   }
 
-  const resync = useCallback(async (desk: Desk) => {
+  async function resyncDesk(desk: Desk) {
     const rig = rigs.current[desk];
     if (!rig) throw new Error(desk === 'buyer' ? 'Start the buyer desk first.' : 'Start the sender desk first.');
     const [lane, peers] = await Promise.all([findCorridor(rig), rig.listPeers()]);
@@ -92,7 +92,9 @@ export function useStudio() {
       patch: { linked: peers.peers.some((p) => keysMatch(p.pubkey, HUB_KEY)), lane },
     });
     await measure(desk);
-  }, [feed]);
+  }
+
+  const resync = useCallback((desk: Desk) => perform(() => resyncDesk(desk), desk), [feed]);
 
   // Boot: restore public run-state, wire page lifecycle.
   useEffect(() => {
@@ -157,7 +159,7 @@ export function useStudio() {
     return () => { cancelled = true; };
   }, [state.payment, feed]);
 
-  const spin = useCallback(async (desk: Desk) => {
+  const spin = useCallback((desk: Desk) => perform(async () => {
     if (rigs.current[desk]) return;
     const guard = guards.current[desk] ??= makeIdentityGuard();
     let spun: Awaited<ReturnType<typeof spinIdentity>> | undefined;
@@ -174,23 +176,23 @@ export function useStudio() {
     });
     await measure(desk);
     if (await findCorridor(spun)) await ensureHub(spun);
-    await resync(desk);
-  }, [feed, resync]);
+    await resyncDesk(desk);
+  }, desk), [feed, resync]);
 
-  const carve = useCallback(async (desk: Desk) => {
+  const carve = useCallback((desk: Desk) => perform(async () => {
     const rig = rigs.current[desk];
     if (!rig) throw new Error('Start this desk first.');
     feed({ type: 'ribbon', text: 'Carving the 500 CKB corridor through Bottle…' });
     const lane = await openCorridor(rig);
     feed({ type: 'desk', desk, patch: { lane } });
-    await resync(desk);
+    await resyncDesk(desk);
     feed({
       type: 'ribbon',
       text: lane && isOpen(lane) ? 'Corridor open: CHANNEL_READY.' : 'Corridor opening submitted. Confirm CHANNEL_READY.',
     });
-  }, [feed, resync]);
+  }, desk), [feed, resync]);
 
-  const pushRelay = useCallback(async () => {
+  const pushRelay = useCallback(() => perform(async () => {
     const rig = rigs.current.sender;
     if (!rig) throw new Error('Start the sender desk first.');
     const id = profileId(localStorage, SENDER_ID);
@@ -226,10 +228,10 @@ export function useStudio() {
       },
     });
     feed({ type: 'ribbon', text: `Relay: ${result.status}` });
-    await resync('sender');
-  }, [feed, resync]);
+    await resyncDesk('sender');
+  }, 'relay'), [feed, resync]);
 
-  const auditRelay = useCallback(async () => {
+  const auditRelay = useCallback(() => perform(async () => {
     const rig = rigs.current.sender;
     if (!rig) throw new Error('Start the sender desk first.');
     const { hash } = state.relay;
@@ -245,10 +247,10 @@ export function useStudio() {
       },
     });
     feed({ type: 'ribbon', text: `Relay audit: ${result.status}` });
-    await resync('sender');
-  }, [feed, resync, state.relay.hash]);
+    await resyncDesk('sender');
+  }, 'relay'), [feed, resync, state.relay.hash]);
 
-  const mint = useCallback(async () => {
+  const mint = useCallback(() => perform(async () => {
     const rig = rigs.current.sender;
     if (!rig) throw new Error('Start the sender desk first.');
     const lane = state.desks.sender?.lane;
@@ -260,9 +262,9 @@ export function useStudio() {
     persist({ sealedPacket: json });
     feed({ type: 'sealed', json });
     feed({ type: 'ribbon', text: 'Packet sealed. Hand it to the buyer desk.' });
-  }, [feed, state]);
+  }, 'sender'), [feed, state]);
 
-  const inspect = useCallback(async () => {
+  const inspect = useCallback(() => perform(async () => {
     const rig = rigs.current.buyer;
     if (!rig) throw new Error('Start the buyer desk first.');
     if (!state.inbox.trim()) throw new Error('Paste the sealed packet into the buyer inbox first.');
@@ -275,9 +277,9 @@ export function useStudio() {
     persist({ inboxText: state.inbox });
     feed({ type: 'packet', packet });
     feed({ type: 'ribbon', text: 'Packet verified: Fibt invoice, 1 CKB, matching hash.' });
-  }, [feed, state.inbox, state.ransomHash]);
+  }, 'buyer'), [feed, state.inbox, state.ransomHash]);
 
-  const probe = useCallback(async () => {
+  const probe = useCallback(() => perform(async () => {
     if (!state.packet) throw new Error('Inspect the sealed packet first.');
     feed({ type: 'ribbon', text: 'Probing the seal without the ransom key…' });
     try {
@@ -292,9 +294,9 @@ export function useStudio() {
     persist({ lockProbed: true });
     feed({ type: 'lock', opened: true });
     feed({ type: 'ribbon', text: 'Seal held: AES-GCM refused the substitute key.' });
-  }, [feed, state.packet]);
+  }, 'buyer'), [feed, state.packet]);
 
-  const settle = useCallback(async () => {
+  const settle = useCallback(() => perform(async () => {
     const rig = rigs.current.buyer;
     if (!rig) throw new Error('Start the buyer desk first.');
     if (!state.packet) throw new Error('Inspect the sealed packet first.');
@@ -310,10 +312,10 @@ export function useStudio() {
     if (result.status === 'Failed') {
       feed({ type: 'alert', text: result.failed_error ?? 'Payment failed. Check liquidity and the relay hint.' });
     }
-    await Promise.all([resync('buyer'), resync('sender')]);
-  }, [feed, resync, state]);
+    await Promise.all([resyncDesk('buyer'), resyncDesk('sender')]);
+  }, 'buyer'), [feed, resync, state]);
 
-  const pollRansom = useCallback(async () => {
+  const pollRansom = useCallback(() => perform(async () => {
     const rig = rigs.current.buyer;
     if (!rig) throw new Error('Start the buyer desk first.');
     if (!state.packet) throw new Error('Inspect the sealed packet first.');
@@ -323,10 +325,10 @@ export function useStudio() {
     const result = await rig.getPayment({ payment_hash: state.ransomHash as `0x${string}` });
     feed({ type: 'payment', result });
     feed({ type: 'ribbon', text: `Ransom: ${result.status}` });
-    await resync('buyer');
-  }, [feed, resync, state.packet, state.ransomHash]);
+    await resyncDesk('buyer');
+  }, 'buyer'), [feed, resync, state.packet, state.ransomHash]);
 
-  const unlock = useCallback(async () => {
+  const unlock = useCallback(() => perform(async () => {
     if (!state.packet || !state.ransomKey) throw new Error('The ransom key has not arrived yet.');
     feed({ type: 'ribbon', text: 'Turning the ransom key into the opened page…' });
     const text = await unseal(
@@ -335,15 +337,15 @@ export function useStudio() {
     );
     feed({ type: 'opened', text });
     feed({ type: 'ribbon', text: 'Opened: matches the sender manuscript.' });
-  }, [feed, state.packet, state.ransomKey]);
+  }, 'buyer'), [feed, state.packet, state.ransomKey]);
 
-  const resetExchange = useCallback(() => {
+  const resetExchange = useCallback(() => perform(async () => {
     if (state.busy || (state.ransomHash && state.payment?.status !== 'Failed')) return;
     persist({ sealedPacket: '', inboxText: '', ransomHash: '', lockProbed: false });
     feed({ type: 'reset-exchange' });
-  }, [feed, state.busy, state.ransomHash, state.payment?.status]);
+  }), [feed, state.busy, state.ransomHash, state.payment?.status]);
 
-  const haltDesks = useCallback(async () => {
+  const haltDesks = useCallback(() => perform(async () => {
     for (const guard of Object.values(guards.current)) await guard?.halt().catch(() => {});
     rigs.current = {};
     guards.current = {};
@@ -351,12 +353,13 @@ export function useStudio() {
     feed({ type: 'desk', desk: 'buyer', patch: { address: undefined, capacity: undefined, capacityNote: undefined, linked: undefined, lane: undefined } });
     feed({ type: 'desk', desk: 'sender', patch: { address: undefined, capacity: undefined, capacityNote: undefined, linked: undefined, lane: undefined } });
     feed({ type: 'ribbon', text: 'Identities stopped. Saved keys remain in this browser.' });
-  }, [feed]);
+  }), [feed]);
 
-  const copySealed = useCallback(async () => {
+  const copySealed = useCallback(() => perform(async () => {
+    if (!state.sealed) throw new Error('Seal a packet first.');
     await navigator.clipboard.writeText(state.sealed);
     feed({ type: 'ribbon', text: 'Packet copied to the clipboard.' });
-  }, [feed, state.sealed]);
+  }, 'sender'), [feed, state.sealed]);
 
   return {
     state,

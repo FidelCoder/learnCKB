@@ -110,7 +110,7 @@ export function BuyerPanel({ state, busy, onInbox, onInspect, onProbe, onSettle,
         <p className="hint">Check in the buyer desk above first.</p>
       )}
       <div className="row">
-        <button className="courier-btn" disabled={busy || Boolean(packet)} onClick={onInspect}>
+        <button className="courier-btn" disabled={busy || Boolean(packet) || !state.inbox.trim()} onClick={onInspect}>
           Inspect packet
         </button>
         {!state.lockOpened && (
@@ -139,8 +139,8 @@ export function BuyerPanel({ state, busy, onInbox, onInspect, onProbe, onSettle,
       )}
       {state.ransomHash && !key && (
         <div className="row">
-          <button className="ghost" disabled={busy || !packet || !state.desks.buyer?.address} onClick={onPoll}>
-            Re-read payment
+            <button className="ghost" disabled={busy || !packet || !state.desks.buyer?.address || !state.ransomHash} onClick={onPoll}>
+              Re-read payment
           </button>
         </div>
       )}

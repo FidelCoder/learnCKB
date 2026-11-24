@@ -21,14 +21,30 @@ type BuyerProps = Common & {
   onUnlock: () => void;
 };
 
-export function SenderPanel({ state, busy, onManuscript, onMint, onCopy, onReset }: SenderProps) {
-  const canMint = Boolean(
+export function SenderPanel({
+  state, busy, onManuscript, onMint, onCopy, onReset,
+}: SenderProps) {
+  const hasReadyLane = Boolean(
     state.desks.sender?.lane
-    && state.manuscript.trim()
-    && !state.sealed
-    && !state.ransomHash,
+    && state.desks.sender.lane.state.state_name === 'CHANNEL_READY'
+    && state.desks.sender.lane.channel_outpoint,
   );
+  const blocked = !hasReadyLane || !state.manuscript.trim() || Boolean(state.sealed) || Boolean(state.ransomHash);
+  const canMint = !blocked;
   const error = state.deskError.sender;
+  const why = state.sealed
+    ? 'Packet already sealed — hand it to the unlock desk.'
+    : state.ransomHash
+      ? 'A ransom attempt is already recorded. Reset the exchange to mint again.'
+      : !state.desks.sender?.lane
+        ? 'Open the sender corridor above first.'
+        : state.desks.sender.lane.state.state_name !== 'CHANNEL_READY'
+          ? `Sender corridor is ${state.desks.sender.lane.state.state_name} — wait for CHANNEL_READY.`
+          : !state.desks.sender.lane.channel_outpoint
+            ? 'Sender lane is waiting for a confirmed funding outpoint.'
+            : !state.manuscript.trim()
+              ? 'Write a manuscript to seal.'
+              : '';
 
   return (
     <section className="panel sender" data-proof="offer">
@@ -51,8 +67,9 @@ export function SenderPanel({ state, busy, onManuscript, onMint, onCopy, onReset
           Seal &amp; mint {showCkb(RANSOM)} ransom
         </button>
       </div>
-      {!state.sealed && !state.ransomHash && (
-        <p className="hint">Needs a live corridor on both desks before sealing.</p>
+      {why && <p className="hint" data-proof="mint-blocked">{why}</p>}
+      {!why && !state.sealed && (
+        <p className="hint">Sealing only needs the live sender corridor — pay from the unlock desk after both routes are ready.</p>
       )}
       <small>Sealed packet · public</small>
       <textarea
@@ -65,7 +82,7 @@ export function SenderPanel({ state, busy, onManuscript, onMint, onCopy, onReset
         <button className="ghost" disabled={!state.sealed || busy} onClick={onCopy}>
           Copy packet
         </button>
-        {state.sealed && !state.ransomHash && (
+        {(state.sealed || state.ransomHash) && (
           <button className="ghost" disabled={busy} onClick={onReset}>
             Reset exchange
           </button>

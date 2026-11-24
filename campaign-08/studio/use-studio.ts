@@ -279,7 +279,8 @@ export function useStudio() {
     if (!rig) throw new Error('Start the sender desk first.');
     const lane = state.desks.sender?.lane;
     if (!lane) throw new Error('Open the sender corridor first.');
-    if (!routeReady(state)) throw new Error(`Route not ready — ${routeIssues(state).join(' · ')}.`);
+    if (!isOpen(lane)) throw new Error(`Sender corridor is ${lane.state.state_name} — wait for CHANNEL_READY.`);
+    if (!lane.channel_outpoint) throw new Error('Sender lane has no confirmed outpoint yet.');
     if (state.sealed || state.ransomHash) throw new Error('A packet already exists. Reset the exchange desk first.');
     feed({ type: 'ribbon', text: 'Sealing the manuscript and minting the 1 CKB ransom…' });
     const json = await mintPacket(rig, lane, state.manuscript);
@@ -375,10 +376,17 @@ export function useStudio() {
   }, 'buyer'), [feed, state.packet, state.ransomKey]);
 
   const resetExchange = useCallback(() => perform(async () => {
-    if (state.busy || (state.ransomHash && state.payment?.status !== 'Failed')) return;
+    if (state.busy) return;
+    if (state.ransomHash && state.payment && state.payment.status !== 'Failed') {
+      throw new Error(
+        state.payment.status === 'Success'
+          ? 'This ransom already settled. Check out both desks to start a fresh run.'
+          : `Payment is still ${state.payment.status}. Wait for Success or Failed before resetting.`,
+      );
+    }
     persist({ sealedPacket: '', inboxText: '', ransomHash: '', lockProbed: false });
     feed({ type: 'reset-exchange' });
-  }), [feed, state.busy, state.ransomHash, state.payment?.status]);
+  }), [feed, state.busy, state.ransomHash, state.payment]);
 
   const haltDesks = useCallback(() => perform(async () => {
     for (const guard of Object.values(guards.current)) await guard?.halt().catch(() => {});

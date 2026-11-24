@@ -2,10 +2,14 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Pay to Unlock · Fiber',
-  description: 'Encrypt a result, sell it for one CKB, and decrypt it with the Fiber payment preimage.',
+  title: 'Cipherpost · pay to open',
+  description: 'Seal a page, sell the ransom invoice, open it only after the Fiber payment settles.',
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return <html lang="en"><body>{children}</body></html>;
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
 }

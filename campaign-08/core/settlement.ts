@@ -1,6 +1,6 @@
 import type { FiberBrowserNode, SendPaymentParams } from '@fiber-pay/sdk/browser';
 import { FEE_CEILING, RANSOM } from './units.ts';
-import type { Packet } from './packet.ts';
+import { toHopHint, type Packet } from './packet.ts';
 import {
   assertRansomLive, dispatchRansom, isPaymentSessionMissing, RansomRejectedError,
 } from './settlement-guards.ts';
@@ -39,7 +39,7 @@ export async function payRansom(
   try {
     return await dispatchRansom(node, packet.hash, {
       invoice: packet.ransom,
-      hop_hints: [packet.relay] as unknown as NonNullable<SendPaymentParams['hop_hints']>,
+      hop_hints: [toHopHint(packet.relay)] as unknown as NonNullable<SendPaymentParams['hop_hints']>,
       max_fee_amount: `0x${FEE_CEILING.toString(16)}`,
       max_parts: '0x1',
     });

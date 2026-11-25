@@ -13,7 +13,7 @@ dApps, and verifiable OffCKB devnet proof.
 | [#04](challenge-4/README.md) | Create a Digital Object (DOB) with Spore SDK | [Implementation and proof](challenge-4/README.md) |
 | [#05](campaign-05/README.md) | Create a Fungible Token with the xUDT standard | [Implementation and local proof](campaign-05/README.md) |
 | [#06](campaign-06/README.md) | Fiber browser node, Testnet channel, and keysend payment | [Implementation and screenshots](campaign-06/README.md) |
-| [#08](campaign-08/README.md) | Pay to unlock encrypted data with a Fiber payment | [Implementation, demos, and proof](campaign-08/README.md) |
+| [#08](campaign-08/README.md) | Cipherpost: Fiber pay-to-open sealed manuscript | [Implementation, proof, and video](campaign-08/README.md) |
 
 ## Proof Model
 

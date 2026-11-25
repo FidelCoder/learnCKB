@@ -47,6 +47,11 @@ function loadIdentity(desk: Desk) {
   return { fiberKey: unpack(row.fiberKey), ckbKey: unpack(row.ckbKey), identifier: row.identifier };
 }
 
+const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// TypeIDResolver hits CKB RPC get_cells during start; flaky RPC surfaces as this.
+const RETRYABLE_START = /Cannot resolve cell dep for type id|failed to init contracts context/i;
+
 export async function spinIdentity(desk: Desk, track: (node: FiberBrowserNode) => void) {
   if (!window.crossOriginIsolated) {
     throw new Error('Cross-origin isolation is missing. Restart the dev server and reload.');
@@ -60,13 +65,25 @@ export async function spinIdentity(desk: Desk, track: (node: FiberBrowserNode) =
     nodeConfig: { bootnodes: [], logLevel: 'info' },
   });
   track(node);
-  await node.start();
-  return node;
+  let last: Error | undefined;
+  for (let attempt = 1; attempt <= 4; attempt += 1) {
+    try {
+      await node.start();
+      return node;
+    } catch (failure) {
+      last = failure instanceof Error ? failure : new Error(String(failure));
+      if (!RETRYABLE_START.test(last.message) || attempt === 4) break;
+      await pause(1_500 * attempt);
+      await node.stop().catch(() => {});
+    }
+  }
+  throw new Error(
+    `The Fiber node could not start after several tries (${last?.message ?? 'unknown error'}). `
+    + 'Check connectivity to testnet.ckbapp.dev, then check in again.',
+  );
 }
 
 export const isOpen = (channel: Channel) => corridorOpen(channel.state.state_name);
-
-const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Fiber's connect resolves before the peer's Init frame; open_channel needs it.
 const HALF_OPEN = /feature not found|Init message|not connected|timed? ?out|connection (closed|reset)/i;

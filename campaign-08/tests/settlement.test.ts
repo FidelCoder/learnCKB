@@ -2,9 +2,19 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { inspectPacket, payRansom } from '../core/settlement.ts';
 import { isPaymentSessionMissing } from '../core/settlement-guards.ts';
+import { toHopHint } from '../core/packet.ts';
 
 const hash = `0x${'a'.repeat(64)}` as const;
-const packet: any = { ransom: 'fibt-example', hash, relay: {} };
+const packet: any = {
+  ransom: 'fibt-example',
+  hash,
+  relay: {
+    pubkey: '0x02b6d4e3ab86a2ca2fad6fae0ecb2e1e559e0b911939872a90abdda6d20302be71',
+    lane: `0x${'b'.repeat(72)}`,
+    feeRate: '0x1',
+    expiryDelta: '0x18',
+  },
+};
 
 function sessionMissingError(target = hash) {
   return new Error(
@@ -13,16 +23,17 @@ function sessionMissingError(target = hash) {
   );
 }
 
-function fixture(status = 'Success'): { node: any; calls: string[] } {
+function fixture(status = 'Success'): { node: any; calls: string[]; params: any[] } {
   const calls: string[] = [];
+  const params: any[] = [];
   const result = { status, payment_hash: hash, fee: '0x0' };
   const node: any = {
     parseInvoice: async () => ({ invoice: { currency: 'Fibt', amount: '0x5f5e100', data: { payment_hash: hash } } }),
-    sendPayment: async () => { calls.push('send'); return result; },
+    sendPayment: async (p: any) => { calls.push('send'); params.push(p); return result; },
     getPayment: async () => { calls.push('check'); return result; },
     waitForPayment: async () => result,
   };
-  return { node, calls };
+  return { node, calls, params };
 }
 
 test('mismatched currency, amount or hash blocks submission', async () => {
@@ -45,6 +56,31 @@ test('the attempt is remembered before dispatch and a storage failure prevents s
     /Storage failed/,
   );
   assert.deepEqual(second.calls, []);
+});
+
+test('hop hints use Fiber field names the payment RPC requires', () => {
+  const hint = toHopHint(packet.relay);
+  assert.deepEqual(hint, {
+    pubkey: packet.relay.pubkey,
+    channel_outpoint: packet.relay.lane,
+    fee_rate: packet.relay.feeRate,
+    tlc_expiry_delta: packet.relay.expiryDelta,
+  });
+  assert.equal('lane' in hint, false);
+  assert.equal('feeRate' in hint, false);
+  assert.equal('expiryDelta' in hint, false);
+});
+
+test('sendPayment receives hop_hints with channel_outpoint, not lane', async () => {
+  const { node, params } = fixture();
+  await payRansom(node, packet, '', () => {});
+  const hop = params[0]?.hop_hints?.[0];
+  assert.ok(hop, 'hop_hints[0] must be present');
+  assert.equal(hop.channel_outpoint, packet.relay.lane);
+  assert.equal(hop.fee_rate, packet.relay.feeRate);
+  assert.equal(hop.tlc_expiry_delta, packet.relay.expiryDelta);
+  assert.equal(hop.lane, undefined);
+  assert.equal(hop.feeRate, undefined);
 });
 
 test('restored successful and pending payments are re-read without resending', async () => {

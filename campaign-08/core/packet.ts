@@ -16,6 +16,23 @@ export type Packet = SealedBytes & {
   };
 };
 
+/** Fiber HopHint field names the payment RPC deserializes. */
+export type HopHintLike = {
+  pubkey: `0x${string}`;
+  channel_outpoint: `0x${string}`;
+  fee_rate: `0x${string}`;
+  tlc_expiry_delta: `0x${string}`;
+};
+
+export function toHopHint(relay: Packet['relay']): HopHintLike {
+  return {
+    pubkey: relay.pubkey,
+    channel_outpoint: relay.lane,
+    fee_rate: relay.feeRate,
+    tlc_expiry_delta: relay.expiryDelta,
+  };
+}
+
 type Json = Record<string, unknown>;
 
 const isObj = (v: unknown): v is Json => typeof v === 'object' && v !== null && !Array.isArray(v);
